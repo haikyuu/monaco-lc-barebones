@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import '@codingame/monaco-vscode-json-default-extension';
 import * as monaco from 'monaco-editor';
 import { initServices } from 'monaco-languageclient/vscode/services';
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
@@ -10,7 +11,6 @@ import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-over
 import { LogLevel } from '@codingame/monaco-vscode-api';
 // monaco-editor does not supply json highlighting with the json worker,
 // that's why we use the textmate extension from VSCode
-import '@codingame/monaco-vscode-json-default-extension';
 import { ConsoleLogger } from 'monaco-languageclient/tools';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-wrapper';
