@@ -3,14 +3,11 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import '@codingame/monaco-vscode-json-default-extension';
-import * as monaco from 'monaco-editor';
+import * as monaco from '@codingame/monaco-vscode-editor-api';
+// load syntax highlighting for common language like python
+import '@codingame/monaco-vscode-standalone-languages';
 import { initServices } from 'monaco-languageclient/vscode/services';
-import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override';
-import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override';
 import { LogLevel } from '@codingame/monaco-vscode-api';
-// monaco-editor does not supply json highlighting with the json worker,
-// that's why we use the textmate extension from VSCode
 import { ConsoleLogger } from 'monaco-languageclient/tools';
 import { configureDefaultWorkerFactory } from 'monaco-editor-wrapper/workers/workerLoaders';
 import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-wrapper';
@@ -18,44 +15,26 @@ import { LanguageClientWrapper, type LanguageClientConfig } from 'monaco-editor-
 export const runClient = async () => {
     const logger = new ConsoleLogger(LogLevel.Debug);
     const htmlContainer = document.getElementById('monaco-editor-root')!;
-    await initServices({
-        serviceOverrides: {
-            ...getTextmateServiceOverride(),
-            ...getThemeServiceOverride()
-        },
-        userConfiguration: {
-            json: JSON.stringify({
-                'editor.experimental.asyncTokenization': true
-            })
-        },
-    }, {
-        logger
-    });
-
-    // register the JSON language with Monaco
-    monaco.languages.register({
-        id: 'json',
-        extensions: ['.json', '.jsonc'],
-        aliases: ['JSON', 'json'],
-        mimetypes: ['application/json']
-    });
+    await initServices({});
 
     configureDefaultWorkerFactory(logger);
 
     // create monaco editor
     monaco.editor.create(htmlContainer, {
-        value: `{
-    "$schema": "http://json.schemastore.org/coffeelint",
-    "line_endings": "unix"
-}`,
-        language: 'json',
+        value: `def print_hello():
+
+    x=5
+    print("Hello World!")
+
+print_hello()`,
+        language: 'python',
         automaticLayout: true,
         wordBasedSuggestions: 'off'
     });
 
     const languageClientConfig: LanguageClientConfig = {
         clientOptions: {
-            documentSelector: ['json']
+            documentSelector: ['py']
         },
         connection: {
             options: {
